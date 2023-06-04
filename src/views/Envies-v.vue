@@ -54,6 +54,7 @@
   </template>
   
   <script>
+  import axios from 'axios'
   export default {
     name: 'Envies-component',
     data() {
@@ -69,13 +70,24 @@
         search:''
       };
     },
+    mounted(){
+            axios.get('http://localhost:5000/envies').then(response => this.envies=(response.data.results));
+        },
+        beforeMount(){
+            this.getEnv()
+        },
+        computed: {
+            EnviesFiltered() { 
+                return this.enviese.filter(envie => {
+                    return envie.nom_e.toLowerCase().includes(this.search.toLowerCase())
+                })
+            },
+            isAdmin(){
+                console.log(this.user);
+                return !this.user.admin;
+            }
+        },
     methods: {
-        // mounted(){
-        //     axios.get('http://localhost:5000/envies').then(response => this.envies=(response.data.results));
-        // },
-        // beforeMount(){
-        //     this.getEnv()
-        // },
       toggleForm() {
         this.showForm = !this.showForm;
         this.resetForm();
@@ -132,6 +144,7 @@ resetForm() {
   this.isEditing = false;
   this.editingIndex = null;
 }
+
 }
 };
 </script>
